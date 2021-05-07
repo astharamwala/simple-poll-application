@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Poll Results</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+            <br />
+            <br />
+			<br />
+			<h2 align="center">Poll System in Python Postgres using Flask</h2><br />
+			<div class="row">
+              <div class="col-md-12" align="center">
+                    <br />
+                    <h3>Poll Result</h3><br />
+                    <div id="poll_result">
+                        
+                    </div>
+                </div>
+			</div>
+</body>
+</html>
+<script>
+    $(document).ready(function(){
+        poll_results()
+
+        function poll_results()
+        {
+            html = "";
+            $.each({{ poll_details | safe }}  , function(author, votes){
+                progress_bar_class = ""
+                percentage_vote = ((votes/{{ total_poll }})*100).toPrecision(3);
+                progress_bar_class = '';
+
+                if(percentage_vote >= 40)
+                {
+                    progress_bar_class = 'progress-bar-success';
+                }
+                else if(percentage_vote >= 25 && percentage_vote < 40)
+                {
+                    progress_bar_class = 'progress-bar-info';
+                }
+                else if(percentage_vote >= 10 && percentage_vote < 25)
+                {
+                    progress_bar_class = 'progress-bar-warning';
+                }
+                else
+                {
+                    progress_bar_class = 'progress-bar-danger';
+                }
+
+                html += `
+                <div class="row">
+                    <div class="col-md-2" align="right">
+                        <label>${author}</label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="progress">
+                            <div class="progress-bar ${progress_bar_class}" role="progressbar" aria-valuenow="${percentage_vote}" aria-valuemin="0" aria-valuemax="100" style="width:${percentage_vote}%">
+                                ${percentage_vote} % people likes <b>${author}</b> - ${votes} votes
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+            })
+            $('#poll_result').html(html);
+        }
+    })
+</script>

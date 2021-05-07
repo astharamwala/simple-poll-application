@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>Live Poll System in Python Postgres using Flask</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+        <div class="container">
+            <br />
+            <br />
+			<br />
+			<h2 align="center">Poll System in Python Postgres using Flask</h2><br />
+			<div class="row" align="left" style="padding-left:400px">
+				<div class="col-md-12">
+					<form method="post" id="poll_form">
+						<h3>Who is your favorite author?</h3>
+						<br />
+						{% for author in authors%}
+							<div class="radio">
+								<label><h4><input type="radio" name="poll_option" class="poll_option" value="{{author.id}}" />
+									{{author.name}}</h4></label>
+							</div>
+						{% endfor %}
+						<br />
+						<input type="submit" name="poll_button" id="poll_button" class="btn btn-primary" />
+					</form>
+					<br />
+				</div>
+			</div>
+
+
+			<br />
+			<br />
+			<br />
+		</div>
+    </body>
+</html>
+<script>
+$(document).ready(function(){
+	$('#poll_form').on('submit', function(event){
+		event.preventDefault();
+		var poll_option = '';
+		$('.poll_option').each(function(){
+			if($(this).prop("checked"))
+			{
+				poll_option = $(this).val();
+			}
+		});
+		if(poll_option != '')
+		{
+			$('#poll_button').attr('disabled', 'disabled');
+
+			var form_data = {"author_id": poll_option};
+			$.ajax({
+				url:"save_poll",
+				method:"POST",
+				contentType: "application/json",
+				data:JSON.stringify(form_data),
+				success:function()
+				{
+					$('#poll_form')[0].reset();
+					$('#poll_button').attr('disabled', false);
+					window.location.href = "/poll_results"
+				}
+			});
+		}
+		else
+		{
+			alert("Please Select Option");
+		}
+	});
+
+
+
+});
+</script>
