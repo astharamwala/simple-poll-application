@@ -52,16 +52,21 @@
                 {
                     progress_bar_class = 'progress-bar-danger';
                 }
+                div_style = label_style = ""
+                if ( {{ highest_vote }} == votes ) {
+                    div_style = "border:1px solid red";
+                    label_style = "color:red";
+                }
 
                 html += `
                 <div class="row">
                     <div class="col-md-2" align="right">
-                        <label>${author}</label>
+                        <label style=${label_style}>${author}</label>
                     </div>
                     <div class="col-md-10">
-                        <div class="progress">
+                        <div class="progress" style="${div_style}">
                             <div class="progress-bar ${progress_bar_class}" role="progressbar" aria-valuenow="${percentage_vote}" aria-valuemin="0" aria-valuemax="100" style="width:${percentage_vote}%">
-                                ${percentage_vote} % people likes <b>${author}</b> - ${votes} votes
+                                ${percentage_vote} % - <b>${votes} votes</b>
                             </div>
                         </div>
                     </div>

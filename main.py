@@ -24,14 +24,16 @@ def home():
 def fetch_poll_data():
     authors = Authors.get_authors()
     poll_details = {}
+    votes = []
     for author in authors:
-        count = Poll.total_author_poll(author.id)
-        poll_details.update({author.name: count})
+        votes.append(Poll.total_author_poll(author.id))
+        poll_details.update({author.name: votes[len(votes)-1]})
     return flask.render_template(
         'result.html',
         authors=authors,
         poll_details=poll_details,
         total_poll=Poll.get_total_polls(),
+        highest_vote = max(votes)
     )
 
 
